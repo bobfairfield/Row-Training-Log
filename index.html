@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rowing Training Log — Sessions 1–38</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f4f6f9; color: #1a1a2e; min-height: 100vh; }
+  .header { background: #1F4E79; color: #fff; padding: 28px 40px 24px; }
+  .header-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+  .header h1 { font-size: 22px; font-weight: 600; letter-spacing: 0.02em; }
+  .header h2 { font-size: 14px; font-weight: 400; opacity: 0.75; margin-top: 4px; }
+  .header-meta { text-align: right; font-size: 12px; opacity: 0.7; line-height: 1.8; }
+  .tab-bar { background: #163a5c; display: flex; padding: 0 40px; border-bottom: 2px solid #2E75B6; overflow-x: auto; }
+  .tab { padding: 13px 20px; font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.6); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: color 0.15s, border-color 0.15s; user-select: none; white-space: nowrap; }
+  .tab:hover { color: rgba(255,255,255,0.9); }
+  .tab.active { color: #fff; border-bottom-color: #F5C842; }
+  .content { padding: 32px 40px; max-width: 960px; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .section-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5a6a7e; margin-bottom: 10px; }
+  .tbl-wrap { overflow-x: auto; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 1px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: #fff; }
+  thead tr { background: #1F4E79; }
+  thead th { color: #fff; font-weight: 600; font-size: 12px; letter-spacing: 0.04em; padding: 11px 14px; text-align: left; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid #eef0f4; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody td { padding: 10px 14px; color: #1a1a2e; vertical-align: top; }
+  tbody tr:hover { background: #f8fafc; }
+  .pr-row { background: #EBF5FF; }
+  .pr-row td { color: #0c3d6e; }
+  .pr-row:hover { background: #deeeff; }
+  .new-pr-row { background: #eaf6e8; }
+  .new-pr-row td { color: #1a4d14; font-weight: 500; }
+  .new-pr-row:hover { background: #d8f0d5; }
+  .sub-row td { color: #5a6a7e; font-size: 12.5px; background: #fafbfc; }
+  .star { color: #c8a000; font-size: 12px; }
+  .session-heading { background: #E8F5E9; border-left: 4px solid #1F4E79; padding: 12px 16px; border-radius: 0 6px 6px 0; margin-bottom: 14px; font-size: 15px; font-weight: 600; color: #1F4E79; }
+  .narrative { background: #fff; border: 1px solid #e2e8f0; border-radius: 0 0 8px 8px; padding: 16px 18px; font-size: 13.5px; line-height: 1.75; color: #2d3748; }
+  .narrative strong { color: #1a1a2e; font-weight: 600; }
+  .stat-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+  .stat { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; min-width: 100px; text-align: center; }
+  .stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #8a96a8; margin-bottom: 4px; }
+  .stat-value { font-size: 19px; font-weight: 600; color: #1F4E79; }
+  .stat-sub { font-size: 11px; color: #8a96a8; margin-top: 2px; }
+  .stat.pr { border-color: #a8d5a2; background: #eaf6e8; }
+  .stat.pr .stat-value { color: #1a4d14; }
+  .stat.pr .stat-label { color: #3a7a34; }
+  .progress-item { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 18px; margin-bottom: 10px; font-size: 13.5px; line-height: 1.7; }
+  .progress-item .pi-label { font-weight: 600; color: #1F4E79; display: block; margin-bottom: 4px; }
+  .progress-item .pi-detail { color: #4a5568; }
+  .progress-item.achieved .pi-label::before { content: '✓ '; color: #276221; }
+  .progress-item.beaten .pi-label::before { content: '★ '; color: #c8a000; }
+  .progress-item.ahead .pi-label::before { content: '↑ '; color: #1F4E79; }
+  .progress-item.newdist .pi-label::before { content: '⟶ '; color: #2E75B6; }
+  .progress-item.info .pi-label::before { content: '— '; color: #888; }
+  .goals-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .goals-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+  .goals-card-header { background: #2E75B6; color: #fff; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 8px 14px; }
+  .goals-card table { font-size: 13px; }
+  .goals-card thead th { background: #e8f0f9; color: #1F4E79; font-size: 11px; padding: 7px 12px; }
+  .goals-card tbody td { padding: 8px 12px; }
+  .goals-card .achieved-cell { color: #276221; font-weight: 600; }
+  .goals-card .beaten-cell { color: #c8a000; font-weight: 600; }
+  .bottom-line { background: #1F4E79; color: #fff; border-radius: 8px; padding: 16px 20px; font-size: 13.5px; line-height: 1.7; margin-top: 18px; }
+  .bottom-line strong { color: #F5C842; }
+  .footer { margin-top: 40px; padding: 20px 40px; border-top: 1px solid #dde3ec; font-size: 11.5px; color: #8a96a8; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  @media (max-width: 640px) {
+    .header, .tab-bar, .content, .footer { padding-left: 16px; padding-right: 16px; }
+    .goals-grid { grid-template-columns: 1fr; }
+    .tab { padding: 11px 12px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div>
+      <h1>Rowing Training Log</h1>
+      <h2>Sessions 1–38 &nbsp;·&nbsp; January 1 – March 27, 2026</h2>
+    </div>
+    <div class="header-meta">
+      Athlete: 75 years old<br>
+      Equipment breakthrough: Feb 5, 2026<br>
+      Peak target: May 7, 2026
+    </div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('pr', this)">PR Table</div>
+  <div class="tab" onclick="showTab('s38', this)">Latest Session</div>
+  <div class="tab" onclick="showTab('progress', this)">Progress — May Goals</div>
+</div>
+
+<div class="content">
+
+  <!-- ══════ PR TABLE ══════ -->
+  <div id="pr" class="panel active">
+    <div class="section-label">Current Personal Records — as of March 19, 2026</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Distance</th><th>Total Time</th><th>Split / 500m</th><th>Power (W)</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+          <tr class="pr-row"><td>500m Sprint</td><td>1:55.1</td><td>1:55.1</td><td>230W</td><td>3/15/26 <span class="star">★</span></td></tr>
+          <tr class="pr-row"><td>500m Interval Best</td><td>1:59.4</td><td>1:59.4</td><td>206W</td><td>3/23/26 <span class="star">★ NEW</span</td></tr>
+          <tr class="new-pr-row"><td>1000m</td><td>4:09.6</td><td>2:04.8</td><td>180W</td><td>3/18/26 <span class="star">★ NEW</span></td></tr>
+          <tr class="pr-row"><td>2000m</td><td>8:56.4</td><td>2:14.1</td><td>145W</td><td>3/4/26</td></tr>
+          <tr class="pr-row"><td>3000m</td><td>13:30.0</td><td>2:15.0</td><td>142W</td><td>3/15/26 <span class="star">★</span></td></tr>
+          <tr class="pr-row"><td>5000m</td><td>22:53.0</td><td>2:17.3</td><td>135W</td><td>3/17/26 <span class="star">★</span></td></tr>
+          <tr class="new-pr-row"><td>8000m</td><td>37:28.0</td><td>2:20.5</td><td>126W</td><td>3/27/26 <span class="star">★ NEW</span</td></tr>
+          <tr class="pr-row"><td>10,000m</td><td>47:50</td><td>2:23.5</td><td>118W</td><td>3/5/26</td></tr>
+          <tr class="new-pr-row"><td>12,000m</td><td>58:02.4</td><td>2:25.1</td><td>115W</td><td>3/19/26 <span class="star">★ NEW</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:10px; font-size:11.5px; color:#8a96a8;">Power calculated from split using P = 2.80 ÷ (split_sec / 500)³</p>
+  </div>
+
+
+  <!-- ══════ SESSION 38 ══════ -->
+  <div id="s38" class="panel">
+    <div class="session-heading">Session 38 — Mar 27, 2026: 8,000m — NEW 8000m PR ★ PR SESSION</div>
+    <div class="stat-bar">
+      <div class="stat pr"><div class="stat-label">Total time</div><div class="stat-value">37:28.0</div><div class="stat-sub">prev. 37:58.4</div></div>
+      <div class="stat pr"><div class="stat-label">Avg split</div><div class="stat-value">2:20.5</div><div class="stat-sub">prev. 2:22.4</div></div>
+      <div class="stat pr"><div class="stat-label">Power</div><div class="stat-value">126W</div><div class="stat-sub">prev. 121W (+5W)</div></div>
+      <div class="stat"><div class="stat-label">Improvement</div><div class="stat-value">−1.9s</div><div class="stat-sub">per 500m / −30.4s total</div></div>
+      <div class="stat"><div class="stat-label">Breathing</div><div class="stat-value">Nasal</div><div class="stat-sub">throughout</div></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Piece</th><th>Distance</th><th>Split / Time</th><th>Breathing</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr class="new-pr-row">
+            <td>1 ★PR</td><td>8,000m ★PR</td><td>2:20.5 avg (37:28.0 total)</td><td>Nasal throughout</td><td>NEW 8000m PR (prev. 2:22.4, S26)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="narrative">
+      <strong>Single-piece session, nasal breathing throughout.</strong> NEW 8000m PR: 37:28.0 (2:20.5 avg split, 126W) — 1.9 seconds/500m faster and 30.4 seconds total faster than the previous best of 37:58.4 (2:22.4, 121W, S26, Mar 1).
+      <br><br>
+      The 2:20.5 nasal pace is faster than the 2:22.0 average of the best previous aerobic 6000m piece (S29, Mar 9), confirming that the entire aerobic curve has shifted upward over the past four weeks. The 5W power gain (121W → 126W) at the same nasal intensity reflects genuine aerobic adaptation — more work per stroke at the same breathing constraint.
+      <br><br>
+      The 2:20.5 average now sits just 3 seconds above the 10,000m PR pace (2:23.5). Aerobic paces at all distances continue to converge. A nasal 10,000m attempt on this trajectory should approach or break 2:21.
+    </div>
+  </div>
+
+  <!-- ══════ PROGRESS ══════ -->
+  <div id="progress" class="panel">
+    <div class="section-label">Progress Toward May 7, 2026 Quarterly Goals — 12 weeks in, 6 weeks to go</div>
+    <div class="goals-grid">
+      <div class="goals-card">
+        <div class="goals-card-header">Moderate Targets (May 7)</div>
+        <table>
+          <thead><tr><th>Distance</th><th>Target</th><th>Current PR</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>500m Sprint</td><td>1:52–1:53</td><td>1:55.1</td><td>3.1s away</td></tr>
+            <tr><td>1000m</td><td>2:05–2:06</td><td class="beaten-cell">2:04.8</td><td class="beaten-cell">★ Beaten</td></tr>
+            <tr><td>2000m</td><td>2:13–2:14</td><td class="achieved-cell">2:14.1</td><td class="achieved-cell">✓ Achieved</td></tr>
+            <tr><td>3000m</td><td>2:15–2:16</td><td class="achieved-cell">2:15.0</td><td class="achieved-cell">✓ Achieved</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="goals-card">
+        <div class="goals-card-header">Stretch Targets (May 7)</div>
+        <table>
+          <thead><tr><th>Distance</th><th>Target</th><th>Gap</th><th>Outlook</th></tr></thead>
+          <tbody>
+            <tr><td>500m Sprint</td><td>1:50–1:51</td><td>4–5s</td><td>Possible</td></tr>
+            <tr><td>1000m</td><td>2:03–2:04</td><td>0.8s</td><td>Within reach</td></tr>
+            <tr><td>2000m</td><td>2:11–2:12</td><td>~2–3s</td><td>Strong aim</td></tr>
+            <tr><td>3000m</td><td>2:13–2:14</td><td>~1–2s</td><td>Within reach</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="progress-item beaten">
+      <span class="pi-label">1000m — Moderate target beaten, stretch target within reach</span>
+      <span class="pi-detail">NEW PR 2:04.8 on Mar 18 (180W). 3.6 sec/500m faster than prior PR of 2:08.4. Stretch target 2:03–2:04 is 0.8 seconds away.</span>
+    </div>
+    <div class="progress-item achieved">
+      <span class="pi-label">2000m — Moderate target achieved</span>
+      <span class="pi-detail">2:14.1 on Mar 4, mouth breathing. Stretch target 2:11–2:12 is the new aim.</span>
+    </div>
+    <div class="progress-item achieved">
+      <span class="pi-label">3000m — Moderate target achieved on only second attempt</span>
+      <span class="pi-detail">2:15.0 on Mar 15 (nasal, 90 min after sprint). Stretch target 2:13–2:14 within reach on a rested fresh attempt.</span>
+    </div>
+    <div class="progress-item ahead">
+      <span class="pi-label">500m Sprint — PR matched; interval PR now sub-2:00</span>
+      <span class="pi-detail">1:55.1 matched Mar 21 (S35). First 400m at 1:52.5 pace. S37 interval PR hit 1:59.4 — first sub-2:00 interval. Ceiling is there; a rested sprint attempt should break 1:54.</span>
+    </div>
+    <div class="progress-item newdist">
+      <span class="pi-label">12,000m — New distance PR (Mar 19)</span>
+      <span class="pi-detail">58:02.4 / 2:25.1 avg / 115W, nasal throughout. Day after the 1000m PR. Aerobic base expanding well beyond the 10km barrier. Back-to-back PR days for the third time in this block.</span>
+    </div>
+    <div class="progress-item info">
+      <span class="pi-label">8000m — NEW PR (Mar 27)</span>
+      <span class="pi-detail">37:28.0 / 2:20.5 / 126W, nasal throughout. 30 seconds faster than prior PR (Mar 1). 2:20.5 nasal pace is faster than the best previous 6000m aerobic average — the entire curve has shifted.</span>
+    </div>
+
+    <div class="bottom-line">
+      <strong>Bottom line:</strong> S35–36 (Mar 21): 500m matched PR + wind sprints avg 1:48.7 after 8 PM. S37 (Mar 23): interval PR 1:59.4 — first sub-2:00. S38 (Mar 27): 8000m PR 37:28.0 / 2:20.5 nasal — 30s faster. Aerobic base and sprint ceiling advancing simultaneously. Rested 500m PR attempt is the next priority.
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <span>Rowing Training Log · Sessions 1–38 · Updated March 19, 2026</span>
+  <span>Power formula: P = 2.80 ÷ (split_sec / 500)³</span>
+</div>
+
+<script>
+function showTab(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
